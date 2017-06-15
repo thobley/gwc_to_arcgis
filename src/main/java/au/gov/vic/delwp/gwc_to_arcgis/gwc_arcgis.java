@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 public class gwc_arcgis {
 
     private static Logger log;
+    private static boolean slippy = false;
 
     public static void main(String[] args) {
         Options ops = new Options();
@@ -37,6 +38,7 @@ public class gwc_arcgis {
         Option minLvlOp = new Option("min", "min-level", true, "Minimun Level to convert from");
         Option maxLvlOp = new Option("max", "max-level", true, "Maximun level to convert to");
         Option logOp = new Option("lc", "log-check", false, "Check previous log file to see if the folder has already been copied");
+       // Option slippyOp = new Option("sm", "slippy", false, "Output the cache as SLIPPY MAP format, not ArcGIS");
 
         //Option acrgiscacheOp = new Option("arcgis", "arcgis-cache", true, "ArcGIS Fromatted Tile Cache Output Location");
         gwccacheOp.setRequired(true);
@@ -47,6 +49,7 @@ public class gwc_arcgis {
         minLvlOp.setRequired(false);
         maxLvlOp.setRequired(false);
         logOp.setRequired(false);
+        //slippyOp.setRequired(false);
         ops.addOption(gwccacheOp)
                 .addOption(acrgiscacheOp)
                 .addOption(formatOp)
@@ -54,6 +57,7 @@ public class gwc_arcgis {
                 .addOption(pxOp)
                 .addOption(minLvlOp)
                 .addOption(maxLvlOp)
+ //               .addOption(slippyOp)
                 .addOption(logOp);
         CommandLineParser parser = new GnuParser(); // <-- Deprecated in commons-cli 1.3 !!!
         HelpFormatter formatter = new HelpFormatter();
@@ -106,6 +110,7 @@ public class gwc_arcgis {
         int minLvl = 0;
         maxLvl = cmd.hasOption("max-level") ? Integer.parseInt(cmd.getOptionValue("max-level")) : maxLvl;
         minLvl = cmd.hasOption("min-level") ? Integer.parseInt(cmd.getOptionValue("min-level")) : minLvl;
+     //   slippy = cmd.hasOption("slippy");
         Boolean logchk = false;
         if (cmd.hasOption("log-check")) {
             if (!old_logfile.exists()) {
@@ -150,7 +155,7 @@ public class gwc_arcgis {
                 if (logchk && alreadyCopied(gwclevel, folder, old_logfile)) {
 
                     log.info("Skipping: " + folder);
-                    System.out.println("Skipping: " + gwclevel + "\\" + folder);
+                    System.out.println("Skipping: " + gwclevel + File.separator + folder);
                     folNum++;
                     continue;
 
